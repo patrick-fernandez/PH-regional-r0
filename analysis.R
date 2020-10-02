@@ -1,11 +1,13 @@
 library(EpiEstim)
 library(ggplot2)
+library(ggplot)
 library(tidyverse)
 library(magrittr)
 library(incidence)
 
 #load data
-data <- read.csv("DOH Data Drop 20200614.csv")
+data <- read.csv("data source/DOH Data Drop 20200614.csv")
+save (data, file = "rda/data.rda")
 data %<>% mutate(DateRepConf=as.Date(DateRepConf, format="%Y-%m-%d"))
 #convert to incidence object
 incid <- incidence(data$DateRepConf)
@@ -15,7 +17,7 @@ parametric_si <- estimate_R(incid, method="parametric_si",
                                 config = make_config(list(
                                   mean_si = 4.8, 
                                   std_si = 2.3)))
-plot(parametric_si, "all")
+
 #NCR data
 NCRsubset <- as.data.frame(subset(data, RegionRes == "NCR",
                                   select=DateRepConf))
@@ -24,7 +26,9 @@ NCR_parametric_si <- estimate_R(incidNCR, method="parametric_si",
                                 config = make_config(list(
                                   mean_si = 4.8, 
                                   std_si = 2.3)))
+png("figures/NCR_R0.png")
 plot(NCR_parametric_si, "R")
+dev.off()
 #RegionVII data
 RegVIIsubset <- as.data.frame(subset(data, RegionRes == "Region VII: Central Visayas"
                                      & DateRepConf >="2020-04-02",
@@ -34,7 +38,9 @@ RegVII_parametric_si <- estimate_R(incidRegVII, method="parametric_si",
                                 config = make_config(list(
                                   mean_si = 4.8, 
                                   std_si = 2.3)))
+png("figures/RegVII_R0.png")
 plot(RegVII_parametric_si, "R")
+dev.off()
 #RegionIVA data
 RegIVAsubset <- as.data.frame(subset(data, RegionRes == "Region IV-A: CALABARZON",
                                      select=DateRepConf))
@@ -43,7 +49,9 @@ RegIVA_parametric_si <- estimate_R(incidRegIVA, method="parametric_si",
                                    config = make_config(list(
                                      mean_si = 4.8, 
                                      std_si = 2.3)))
+plot("figures/RegIVA.png")
 plot(RegIVA_parametric_si, "R")
+dev.off()
 #RegionIII data
 RegIIIsubset <- as.data.frame(subset(data, RegionRes == "Region III: Central Luzon"
                                      & DateRepConf >="2020-03-09",
@@ -53,7 +61,9 @@ RegIII_parametric_si <- estimate_R(incidRegIII, method="parametric_si",
                                    config = make_config(list(
                                      mean_si = 4.8, 
                                      std_si = 2.3)))
+png("figures/REGIII_R0.png")
 plot(RegIII_parametric_si, "R")
+dev.off()
 #RegionXI data
 RegXIsubset <- as.data.frame(subset(data, RegionRes == "Region XI: Davao Region"
                                       & DateRepConf >= "2020-03-10",
@@ -63,4 +73,7 @@ RegXI_parametric_si <- estimate_R(incidRegXI, method="parametric_si",
                                    config = make_config(list(
                                      mean_si = 4.8, 
                                      std_si = 2.3)))
+png("figures/RegXI_R0.png")
 plot(RegXI_parametric_si, "R")
+dev.off()
+
